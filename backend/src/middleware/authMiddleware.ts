@@ -9,8 +9,9 @@ interface DecodedToken {
 export const auth = (req: Request, res: Response, next: NextFunction): void => {
   try {
     const token =
-      req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
-    if (token) {
+      req?.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");
+    if (!token) {
+      console.log("yestoken")
       res.status(401).json({
         success: false,
         message: "Authentication required",
@@ -21,8 +22,8 @@ export const auth = (req: Request, res: Response, next: NextFunction): void => {
       token,
       process.env.JWT_SECRET || "your-secret-key"
     ) as DecodedToken;
-
     (req as any).user = decoded;
+
 
     next();
   } catch (err: any) {
@@ -30,5 +31,6 @@ export const auth = (req: Request, res: Response, next: NextFunction): void => {
       success: false,
       message: "Invalid or expired token",
     });
+    console.log("err",err);
   }
 };

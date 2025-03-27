@@ -7,7 +7,7 @@ export const userRoutes = (userController: UserController): Router => {
   router.post("/register", userController.register);
   router.post("/login", userController.login);
   router.patch("/update-user", auth, userController.updateProfile);
-  router.get("/user", auth, userController.getProfile);
+  router.get("/", auth, userController.getProfile);
 
   return router;
 };
