@@ -2,14 +2,6 @@ import { PostService } from "../services/PostServices";
 import { Post } from "../entities/post.entities";
 import { Request, Response } from "express";
 
-interface Iuser {
-  email?: string;
-  name?: string;
-}
-interface AuthenticatedRequest extends Request {
-  //   user: IUs;
-}
-
 export class PostControrller {
   private postService: PostService;
 
@@ -19,9 +11,7 @@ export class PostControrller {
   createPost = async (req: Request, res: Response) => {
     try {
       const postData = req.body;
-      console.log("postdata",postData);
       const authorId = (req as any).user.id;
-      console.log("author",(req as any).user);
       const createdPost = await this.postService.createPost(authorId, postData);
       res.status(200).json({ message: "success", data: createdPost });
     } catch (err: any) {
@@ -67,7 +57,7 @@ export class PostControrller {
   };
   getPostById = async (req: Request, res: Response) => {
     try {
-      const {id} = (req as any).params;
+      const { id } = req.params;
       const post = await this.postService.getPostById(id);
       if (!post) {
         res.status(404).json({
@@ -102,7 +92,7 @@ export class PostControrller {
   };
   getAuthorPost = async (req: Request, res: Response) => {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const getAuthorPost = await this.postService.getAllPostOfAuthor(id);
       res.status(200).json({ message: "success", data: getAuthorPost });
     } catch (err: any) {
