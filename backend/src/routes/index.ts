@@ -5,11 +5,13 @@ import { likeRoutes } from "./likeRoutes";
 import { LikeController } from "../controller/LikeController";
 import { postRouter } from "./postRoutes";
 import { PostControrller } from "../controller/PostController";
-
+import { CommentRouter } from "./commentRoutes";
+import { CommentController } from "../controller/CommentController";
 export const createApiRouter = (
   userController: UserController,
   postController: PostControrller,
-  likeController: LikeController
+  likeController: LikeController,
+  commentController: CommentController
 ): Router => {
   const router = Router();
 
@@ -17,5 +19,6 @@ export const createApiRouter = (
   router.use("/like", likeRoutes(likeController));
 
   router.use("/post", postRouter(postController));
+  router.use("/comment", CommentRouter(commentController));
   return router;
 };
