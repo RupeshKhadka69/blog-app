@@ -40,6 +40,20 @@ export class PostControrller {
       });
     }
   };
+  uploadImage = async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        console.log("no file provided");
+        return;
+      }
+      const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
+        req.file.filename
+      }`;
+      res.status(200).json({ url: imageUrl });
+    } catch (err: any) {
+      res.status(500).json({ message: "error uploading file" });
+    }
+  };
   deletePost = async (req: Request, res: Response) => {
     try {
       const authorId = (req as any).user.id;
