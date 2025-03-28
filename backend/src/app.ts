@@ -1,6 +1,7 @@
 import express, { Express, urlencoded, Request, Response } from "express";
 import cors from "cors";
 import { DataSource } from "typeorm";
+import cookieParser from "cookie-parser";
 import { ErrorHandler, notFound } from "./middleware/errorMiddleware";
 import { createApiRouter } from "./routes";
 import { UserRepository } from "./repositories/UserRepository";
@@ -11,6 +12,10 @@ import { LikesRepository } from "./repositories/LikesRepository";
 import { Like } from "./entities/likes.entities";
 import { LikeServices } from "./services/LikeServices";
 import { LikeController } from "./controller/LikeController";
+import { PostRepository } from "./repositories/PostRepository";
+import { Post } from "./entities/post.entities";
+import { PostService } from "./services/PostServices";
+import { PostControrller } from "./controller/PostController";
 
 export class App {
   public app: Express;
@@ -28,6 +33,7 @@ export class App {
     this.app.use(express.json());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cors());
+    this.app.use(cookieParser())
   }
   private initializeRoutes() {
     // initializing the repository
@@ -37,6 +43,7 @@ export class App {
     const likeRepository = new LikesRepository(
       this.dataSource.getRepository(Like)
     );
+    const postRepository = new PostRepository(this.dataSource.getRepository(Post))
 
     // initializing the services
     const userService = new UserService(userRepository);
@@ -46,9 +53,21 @@ export class App {
     const userController = new UserController(userService);
     const likeController = new LikeController(likeService);
 
-    const apiRouter = createApiRouter(userController, likeController);
+    // initializing the services
+    const postService = new PostService(postRepository);
 
-    this.app.use("/api", apiRouter);
+    // initializing the controller
+    const postController = new PostControrller(postService);
+
+
+    const apiRouter = createApiRouter(
+        userController,
+        postController,
+        likeController
+    )
+  
+    this.app.use("/api",apiRouter);
+
   }
 
   private initializeErrorMiddleware() {

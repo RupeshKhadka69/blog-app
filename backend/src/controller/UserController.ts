@@ -28,10 +28,14 @@ export class UserController {
         email
       );
       const { password: _, ...rest } = loginUser;
+      const options = {
+        httpOnly: true,
+        secure: false,
+      };
       res
         .status(200)
-        .cookie("token", token)
-        .json({ message: "success", data: { rest, token } });
+        .cookie("token", token,options)
+        .json({ message: "success", data: { ...rest, token } });
     } catch (err: any) {
       res.status(400).json({
         success: false,
