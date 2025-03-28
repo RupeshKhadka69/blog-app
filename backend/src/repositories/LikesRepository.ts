@@ -6,8 +6,8 @@ export class LikesRepository extends BaseRepository<Like> {
     constructor (repository: Repository<Like>){
         super(repository);
     }
-    async findUserPostLike(userId:string,postId:string):Promise<Like[]>{
-     return this.repository.find({
+    async findUserPostLike(userId:string,postId:string):Promise<Like | null>{
+     return this.repository.findOne({
         where: {postId,userId}
      })
     }
@@ -16,4 +16,4 @@ export class LikesRepository extends BaseRepository<Like> {
           where: { userId, commentId }
         });
       }
-}
+} 
