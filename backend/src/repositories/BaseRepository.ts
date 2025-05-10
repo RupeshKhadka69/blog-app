@@ -4,6 +4,7 @@ import {
   FindOneOptions,
   DeepPartial,
   ObjectLiteral,
+  FindManyOptions
 } from "typeorm";
 
 export abstract class BaseRepository<T extends ObjectLiteral> {
@@ -15,6 +16,9 @@ export abstract class BaseRepository<T extends ObjectLiteral> {
 
   async findAll(): Promise<T[]> {
     return this.repository.find();
+  }
+  async find(options:FindManyOptions):Promise<T[]>{
+    return this.repository.find(options);
   }
   async findById(id: string): Promise<T | null> {
     return this.repository.findOneBy({ id } as unknown as FindOptionsWhere<T>);
